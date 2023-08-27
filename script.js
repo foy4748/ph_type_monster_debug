@@ -156,9 +156,7 @@ setInterval(() => {
 	const currentTime = new Date().getTime();
 	const timeSpent = (currentTime - startTime) / 1000;
 
-	// Issue 2 : Fixed
-	document.getElementById("show-time").innerHTML = `${startTime ? parseInt(timeSpent) : 0
-		} seconds`;
+	document.getElementById("show-time").innerHTML = timeSpent;
 }, 1000);
 
 const cleanStorage = () => {
