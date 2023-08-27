@@ -13,101 +13,84 @@ let questionText = "";
 
 // Load and display question
 fetch("./texts.json")
-  .then((res) => res.json())
-  .then((data) => {
-    questionText = data[Math.floor(Math.random() * data.length)];
-    question.innerHTML = questionText;
-  });
+	.then((res) => res.json())
+	.then((data) => {
+		questionText = data[Math.floor(Math.random() * data.length)];
+		question.innerHTML = questionText;
+	});
 
 // checks the user typed character and displays accordingly
 const typeController = (e) => {
-  // Issue 3 : Fixed
-  e.preventDefault();
 
-  const newLetter = e.key;
+	const newLetter = e.key;
 
-  // Handle backspace press
-  if (newLetter == "Backspace") {
-    userText = userText.slice(0, userText.length - 1);
+	// Handle backspace press
+	if (newLetter == "Backspace") {
+		userText = userText.slice(0, userText.length - 1);
 
-    // Error 5
-    // If no text is typed, pressing backspace is throwing an error
+		return display.removeChild(display.lastChild);
+	}
 
-    // Wrong piece of code
-    //return display.removeChild(display.lastChild);
+	// these are the valid character we are allowing to type
+	const validLetters =
+		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890!@#$%^&*()_+-={}[]'\".,?";
 
-    // Fix: Checked if there is any text in the field, then performed the removeChild operation
-    display.lastChild && display.removeChild(display.lastChild);
-  }
+	// if it is not a valid character like Control/Alt then skip displaying anything
+	if (!validLetters.includes(newLetter)) {
+		return;
+	}
 
-  // these are the valid character we are allowing to type
-  const validLetters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890!@#$%^&*()_+-={}[]'\".,?";
+	userText += newLetter;
 
-  // if it is not a valid character like Control/Alt then skip displaying anything
-  if (!validLetters.includes(newLetter)) {
-    return;
-  }
+	const newLetterCorrect = validate(newLetter);
 
-  userText += newLetter;
+	if (newLetterCorrect) {
+		display.innerHTML += `<span class="green">${newLetter === " " ? "▪" : newLetter
+			}</span>`;
+	} else {
+		display.innerHTML += `<span class="red">${newLetter === " " ? "▪" : newLetter
+			}</span>`;
+	}
 
-  const newLetterCorrect = validate(newLetter);
-
-  if (newLetterCorrect) {
-    display.innerHTML += `<span class="green">${
-      newLetter === " " ? "▪" : newLetter
-    }</span>`;
-  } else {
-    display.innerHTML += `<span class="red">${
-      newLetter === " " ? "▪" : newLetter
-    }</span>`;
-
-    // Error 4
-    // Problem: Error count was not working
-
-    // Fix: Increamented the errorCount if newLetterCorrect is falsey
-    errorCount++;
-  }
-
-  // check if given question text is equal to user typed text
-  if (questionText === userText) {
-    gameOver();
-  }
+	// check if given question text is equal to user typed text
+	if (questionText === userText) {
+		gameOver();
+	}
 };
 
 const validate = (key) => {
-  if (key === questionText[userText.length - 1]) {
-    return true;
-  }
-  return false;
+	if (key === questionText[userText.length - 1]) {
+		return true;
+	}
+	return false;
 };
 
 // FINISHED TYPING
 const gameOver = () => {
-  document.removeEventListener("keydown", typeController);
-  // the current time is the finish time
-  // so total time taken is current time - start time
-  const finishTime = new Date().getTime();
-  const timeTaken = (finishTime - startTime) / 1000;
+	document.removeEventListener("keydown", typeController);
+	// the current time is the finish time
+	// so total time taken is current time - start time
+	const finishTime = new Date().getTime();
+	const timeTaken = (finishTime - startTime) / 1000;
 
-  //Calculating WPM and CPM
-  const wordNumber = questionText.split(" ").length;
-  const charNumber = questionText.split("").length;
+	//Calculating WPM and CPM
+	const wordNumber = questionText.split(" ").length;
+	const charNumber = questionText.split("").length;
 
-  const timeTakenInMinutes = timeTaken / 60.0;
-  const WPM = Math.round((wordNumber * 100) / timeTakenInMinutes) / 100;
-  const CPM = Math.round((charNumber * 100) / timeTakenInMinutes) / 100;
+	const timeTakenInMinutes = timeTaken / 60.0;
+	const WPM = Math.round((wordNumber * 100) / timeTakenInMinutes) / 100;
+	const CPM = Math.round((charNumber * 100) / timeTakenInMinutes) / 100;
 
-  // show result modal
-  resultModal.innerHTML = "";
-  resultModal.classList.toggle("hidden");
-  modalBackground.classList.toggle("hidden");
-  // clear user text
-  display.innerHTML = "";
-  // make it inactive
-  display.classList.add("inactive");
-  // show result
-  resultModal.innerHTML += `
+	// show result modal
+	resultModal.innerHTML = "";
+	resultModal.classList.toggle("hidden");
+	modalBackground.classList.toggle("hidden");
+	// clear user text
+	display.innerHTML = "";
+	// make it inactive
+	display.classList.add("inactive");
+	// show result
+	resultModal.innerHTML += `
     <h1>Finished!</h1>
     <p>You took: <span class="bold">${parseInt(timeTaken)}</span> seconds</p>
     <p>Typing Speed (WPM): <span class="bold">${parseInt(WPM)}</span> WPM</p>
@@ -116,61 +99,50 @@ const gameOver = () => {
     <button onclick="closeModal()">Close</button>
   `;
 
-  addHistory(questionText, timeTaken, errorCount, WPM, CPM);
+	addHistory(questionText, timeTaken, errorCount, WPM, CPM);
 
-  // restart everything
-  startTime = null;
-  errorCount = 0;
-  userText = "";
-  display.classList.add("inactive");
+	// restart everything
+	startTime = null;
+	errorCount = 0;
+	userText = "";
+	display.classList.add("inactive");
 };
 
 const closeModal = () => {
-  modalBackground.classList.toggle("hidden");
-  resultModal.classList.toggle("hidden");
+	modalBackground.classList.toggle("hidden");
+	resultModal.classList.toggle("hidden");
 };
 
 const start = () => {
-  // If already started, do not start again
-  if (startTime) return;
+	// If already started, do not start again
+	if (startTime) return;
 
-  // Added to clear the countdown before starting it again
-  countdownOverlay.innerHTML = "";
+	// Added to clear the countdown before starting it again
+	countdownOverlay.innerHTML = "";
 
-  let count = 3;
-  countdownOverlay.style.display = "flex";
+	let count = 3;
+	countdownOverlay.style.display = "flex";
 
-  const startCountdown = setInterval(() => {
-    // Error 2
-    // Problem: Clicking Start button shows ${count} which is not expected
+	const startCountdown = setInterval(() => {
 
-    // Wrong piece of code
-    //countdownOverlay.innerHTML = '<h1>${count}</h1>';
 
-    //Fix: Used Template literal instead of string for dynamic DOM element
-    countdownOverlay.innerHTML = `<h1>${count}</h1>`;
+		countdownOverlay.innerHTML = '<h1>${count}</h1>';
 
-    // finished timer
-    if (count == 0) {
-      // -------------- START TYPING -----------------
-      document.addEventListener("keydown", typeController);
+		// finished timer
+		if (count == 0) {
+			// -------------- START TYPING -----------------
+			document.addEventListener("keydown", typeController);
 
-      // Error 3
-      //Found in UI
-      //Problem: The count down is not disappearing if reaches 0
-      // Wrong piece of code
-      //countdownOverlay.style.display = "flex";
 
-      //Fix: Set the Countdown overlay display:none instead of display:flex
-      countdownOverlay.style.display = "none";
+			countdownOverlay.style.display = "flex";
 
-      display.classList.remove("inactive");
+			display.classList.remove("inactive");
 
-      clearInterval(startCountdown);
-      startTime = new Date().getTime();
-    }
-    count--;
-  }, 1000);
+			clearInterval(startCountdown);
+			startTime = new Date().getTime();
+		}
+		count--;
+	}, 1000);
 };
 
 // START Countdown
@@ -181,16 +153,15 @@ displayHistory();
 
 // Show typing time spent
 setInterval(() => {
-  const currentTime = new Date().getTime();
-  const timeSpent = (currentTime - startTime) / 1000;
+	const currentTime = new Date().getTime();
+	const timeSpent = (currentTime - startTime) / 1000;
 
-  // Issue 2 : Fixed
-  document.getElementById("show-time").innerHTML = `${
-    startTime ? parseInt(timeSpent) : 0
-  } seconds`;
+	// Issue 2 : Fixed
+	document.getElementById("show-time").innerHTML = `${startTime ? parseInt(timeSpent) : 0
+		} seconds`;
 }, 1000);
 
 const cleanStorage = () => {
-  localStorage.clear();
-  location.reload();
+	localStorage.clear();
+	location.reload();
 };

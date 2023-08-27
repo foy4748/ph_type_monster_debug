@@ -1,57 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Speed Monster</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <h1 class="title"><img src="./logo.png" /></h1>
-    <div id="show-time">0 seconds</div>
 
-    <div class="box-container">
-      <div id="question"></div>
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Speed Monster</title>
+	<link rel="stylesheet" href="styles.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
 
-      <div id="display" class="inactive"></div>
+<body>
+	<h1 class="title"><img src="./logo.png" /></h1>
+	<div id="show-time">0 seconds</div>
 
-      <div class="buttons">
-        <!-- Error 1 -->
-        <!--
-			Wrong piece of code
+	<div class="box-container">
+		<div id="question"></div>
+
+		<div id="display" class="inactive"></div>
+
+		<div class="buttons">
 			<button id="starts">START</button>
-		-->
-        <!-- Fixed the id -->
-        <button id="start">START</button>
-      </div>
+		</div>
 
-      <div class="buttons">
-        <a href='/blog' id='blogBtn'>Blogs</a>
-        <button onclick="cleanStorage()">Clear History</button>
-      </div>
+		<div class="buttons">
+			<a href='/blog' id='blogBtn'>Blogs</a>
+			<button onclick="cleanStorage()">Clear History</button>
+		</div>
 
-      <div class="divider-container">
-        <div class="line"></div>
-        <h1 class="title2">History</h1>
-        <div class="line"></div>
-      </div>
-      <div id="histories"></div>
-    </div>
+		<div class="divider-container">
+			<div class="line"></div>
+			<h1 class="title2">History</h1>
+			<div class="line"></div>
+		</div>
+		<div id="histories"></div>
+	</div>
 
-    <div id="countdown"></div>
+	<div id="countdown"></div>
 
-    <div id="modal-background" class="hidden">
-      <div id="result" class="hidden"></div>
-    </div>
+	<div id="modal-background" class="hidden">
+		<div id="result" class="hidden"></div>
+	</div>
 
-    <script src="./history.js"></script>
-    <script src="./script.js"></script>
-  </body>
+	<script src="./history.js"></script>
+	<script src="./script.js"></script>
+</body>
+
 </html>
